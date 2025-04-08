@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synthetic Stack Bar Chart Generator</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('favicon') }}" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      .navbar {
+        padding: 0;
+      }
+      h5 {
+        margin-bottom: 0;
+      }
+
+      input {
+        outline: 1px solid #e9ecef;
+      }
+      input[type="range"] {
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <!-- <i class="fas fa-chart-bar mr-2"></i> -->
+          <!-- Use favicon -->
+          <img
+            src="{{ url_for('favicon') }}"
+            alt="Logo"
+            width="30"
+            height="30"
+            class="d-inline-block align-top mr-2"
+            style="border-radius: 50%; background-color: white"
+          />
+          Synthetic Stack Bar Chart Generator
+        </a>
+        <a
+          class="navbar-brand"
+          href="https://github.com/ayush-thakur02/stackbar-gen"
+          target="_blank"
+        >
+          <i class="fab fa-github mr-2"></i>
+          @ayush-thakur02
+        </a>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h5><i class="fas fa-sliders-h mr-2"></i>Configuration</h5>
+            </div>
+            <div class="card-body">
+              <form id="generateForm">
+                <div class="form-group">
+                  <label for="num_categories">
+                    <i class="fas fa-th-large mr-1"></i> Number of Categories
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="num_categories"
+                    name="num_categories"
+                    min="1"
+                    max="15"
+                    value="5"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="num_subcategories">Number of Subcategories</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="num_subcategories"
+                    name="num_subcategories"
+                    min="1"
+                    max="10"
+                    value="3"
+                  />
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="min_value">Min Value</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="min_value"
+                      name="min_value"
+                      value="0"
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="max_value">Max Value</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="max_value"
+                      name="max_value"
+                      value="100"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="theme">Theme</label>
+                  <select class="form-control" id="theme" name="theme">
+                    <option value="default">Default</option>
+                    <option value="dark">Dark</option>
+                    <option value="seaborn">Seaborn</option>
+                    <option value="bmh">BMH</option>
+                    <option value="ggplot">ggplot</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="title">Chart Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    name="title"
+                    value="Stack Bar Chart"
+                  />
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="xlabel">X-axis Label</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="xlabel"
+                      name="xlabel"
+                      value="Categories"
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="ylabel">Y-axis Label</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="ylabel"
+                      name="ylabel"
+                      value="Values"
+                    />
+                  </div>
+                </div>
+                <div class="form-group form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="include_grid"
+                    name="include_grid"
+                    checked
+                  />
+                  <label class="form-check-label" for="include_grid"
+                    >Include Grid</label
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="naming_type">Naming Type</label>
+                  <select
+                    class="form-control"
+                    id="naming_type"
+                    name="naming_type"
+                  >
+                    <option value="default">
+                      Default (Category 1, 2, ...)
+                    </option>
+                    <option value="custom">Custom Names</option>
+                    <option value="random">Random Predefined Names</option>
+                    <option value="randomname">Fully Random Names</option>
+                  </select>
+                </div>
+
+                <div id="customNamesSection" style="display: none">
+                  <div class="form-group">
+                    <label for="custom_categories">Custom Categories</label>
+                    <textarea
+                      class="form-control"
+                      id="custom_categories"
+                      name="custom_categories"
+                      placeholder="Enter category names separated by commas"
+                      rows="2"
+                    ></textarea>
+                    <small class="form-text text-muted"
+                      >Example: Apples, Oranges, Bananas</small
+                    >
+                  </div>
+                  <div class="form-group">
+                    <label for="custom_subcategories"
+                      >Custom Subcategories</label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="custom_subcategories"
+                      name="custom_subcategories"
+                      placeholder="Enter subcategory names separated by commas"
+                      rows="2"
+                    ></textarea>
+                    <small class="form-text text-muted"
+                      >Example: Sales, Costs, Profits</small
+                    >
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="error_type">Error Type</label>
+                  <select
+                    class="form-control"
+                    id="error_type"
+                    name="error_type"
+                  >
+                    <option value="none">No Errors</option>
+                    <option value="missing_label">Missing Labels</option>
+                    <option value="truncated_axis">Truncated Axis</option>
+                    <option value="color_issues">Color Issues</option>
+                    <option value="overlapping">Overlapping Elements</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="error_probability">Error Probability</label>
+                  <input
+                    type="range"
+                    class="form-control-range"
+                    id="error_probability"
+                    name="error_probability"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value="0.1"
+                  />
+                  <small id="error_probability_value">0.1</small>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="width">Width (px)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="width"
+                      name="width"
+                      min="400"
+                      max="2000"
+                      value="800"
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="height">Height (px)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="height"
+                      name="height"
+                      min="300"
+                      max="1500"
+                      value="600"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="dpi">DPI</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="dpi"
+                    name="dpi"
+                    min="72"
+                    max="300"
+                    value="100"
+                  />
+                </div>
+                <div class="mt-4">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-magic mr-1"></i> Generate
+                  </button>
+                  <button
+                    type="button"
+                    id="batchGenerateBtn"
+                    class="btn btn-secondary ml-2"
+                  >
+                    <i class="fas fa-layer-group mr-1"></i> Batch Generate
+                  </button>
+                </div>
+              </form>
+
+              <!-- Batch Generate Modal -->
+              <div
+                class="modal fade"
+                id="batchModal"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">
+                        <i class="fas fa-layer-group mr-2"></i>Batch Generation
+                      </h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form id="batchForm">
+                        <div class="form-group">
+                          <label for="count">Number of Charts</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="count"
+                            name="count"
+                            min="1"
+                            max="50"
+                            value="10"
+                          />
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="min_categories">Min Categories</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="min_categories"
+                              name="min_categories"
+                              value="3"
+                            />
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="max_categories">Max Categories</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="max_categories"
+                              name="max_categories"
+                              value="8"
+                            />
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="min_subcategories"
+                              >Min Subcategories</label
+                            >
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="min_subcategories"
+                              name="min_subcategories"
+                              value="2"
+                            />
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="max_subcategories"
+                              >Max Subcategories</label
+                            >
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="max_subcategories"
+                              name="max_subcategories"
+                              value="5"
+                            />
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                      >
+                        <i class="fas fa-times mr-1"></i> Close
+                      </button>
+                      <button
+                        type="button"
+                        id="startBatchBtn"
+                        class="btn btn-primary"
+                      >
+                        <i class="fas fa-play mr-1"></i> Generate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h5><i class="fas fa-images mr-2"></i>Generated Charts</h5>
+            </div>
+            <div class="card-body">
+              <div id="generatedCharts" class="row"></div>
+              <div class="text-center mt-4">
+                <button id="downloadBtn" class="btn btn-success" disabled>
+                  <i class="fas fa-download mr-1"></i> Download All
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

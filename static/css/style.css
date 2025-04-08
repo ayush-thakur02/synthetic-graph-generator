@@ -1,0 +1,318 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Inter', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #495057;
+}
+
+.container {
+    margin: 20px auto;
+    max-width: calc(100% - 40px);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    font-weight: 600;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: linear-gradient(to right, #4e73df, #3a5ad0) !important;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Remove the preview styles as they're no longer needed */
+#chartPreview {
+    display: none;
+}
+
+#chartPreview img {
+    max-width: 100%;
+    max-height: 500px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.generated-chart {
+    margin-bottom: 20px;
+}
+
+.generated-chart img {
+    max-width: 100%;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+.generated-chart img:hover {
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.chart-controls {
+    margin-top: 5px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#error_probability_value {
+    display: inline-block;
+    width: 30px;
+    text-align: right;
+    font-weight: 500;
+}
+
+/* For the preview area when no chart is generated */
+#chartPreview p {
+    color: #999;
+    font-style: italic;
+}
+
+.generated-chart-container {
+    position: relative;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.generated-chart-container:hover {
+    transform: translateY(-3px);
+}
+
+.chart-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.generated-chart-container:hover .chart-actions {
+    opacity: 1;
+}
+
+.chart-actions .btn-danger {
+    padding: 5px 10px;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-data {
+    margin-top: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 12px;
+}
+
+/* Form styling */
+.form-control {
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    padding: 10px 15px;
+    height: auto;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.15);
+}
+
+.btn {
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, #4e73df, #3a5ad0);
+    border-color: transparent;
+}
+
+.btn-primary:hover, .btn-primary:active {
+    background: linear-gradient(to right, #3a5ad0, #2e429c);
+    border-color: transparent;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: transparent;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: transparent;
+}
+
+.btn-success {
+    background: linear-gradient(to right, #1cc88a, #18aa74);
+    border-color: transparent;
+}
+
+.btn-success:hover {
+    background: linear-gradient(to right, #18aa74, #159a68);
+    border-color: transparent;
+}
+
+.btn-danger {
+    background-color: #e74a3b;
+    border-color: transparent;
+}
+
+/* Modal styling */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transform: none !important; /* Prevent any transform effects in modals */
+}
+
+/* Fix for modal blinking issues */
+.modal .card {
+    transition: none; /* Disable transitions for cards in modals */
+    transform: none !important; /* Prevent any transform effects in modals */
+    box-shadow: none; /* Remove hover shadow effect in modals */
+}
+
+.modal .card:hover {
+    box-shadow: none;
+    transform: none !important;
+}
+
+.modal-dialog {
+    transition: transform 0.15s ease-out !important; /* Simplify modal transition */
+    transform: none !important; /* Prevent unwanted transforms */
+}
+
+.modal-header {
+    background: linear-gradient(to right, #4e73df, #3a5ad0);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+    padding: 15px 20px;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.close {
+    color: white;
+    opacity: 0.8;
+    text-shadow: none;
+}
+
+.close:hover {
+    color: white;
+    opacity: 1;
+}
+
+/* Custom range styling */
+input[type="range"] {
+    --webkit-appearance: none;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    --webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    /* background: #4e73df; */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Checkbox styling */
+.form-check-input {
+    margin-top: 0.25rem;
+}
+
+select.form-control {
+    cursor: pointer;
+    outline: 1px solid #e9ecef;
+    border-right: 16px solid #fff;
+    /* background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"); */
+    /* background-repeat: no-repeat; */
+    /* background-position: right 0.75rem center; */
+    /* background-size: 8px 10px; */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px auto;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+    }
+}
+
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(to right, #4e73df, #3a5ad0) !important;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* New class to prevent animations when modal is open */
+.modal-open-no-animations .modal,
+.modal-open-no-animations .modal *,
+.modal-open-no-animations .modal-content,
+.modal-open-no-animations .modal-dialog {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
+/* Remove all hover effects while modal is open to prevent blinking */
+.modal-open-no-animations * {
+    pointer-events: auto;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* Override Bootstrap's modal fade animation */
+.modal-open-no-animations .fade {
+    transition: opacity .01s linear !important;
+}
